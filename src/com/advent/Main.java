@@ -19,7 +19,9 @@ public class Main {
         // temp += day1("a");
         // temp += day1("b");
         // temp += day2("a");
-        temp += day2("b");
+        // temp += day2("b");
+        // temp += day3("a");
+        temp += day3("b");
 
         CopyToClipboard(temp);
         System.out.println(temp);
@@ -28,11 +30,11 @@ public class Main {
     private static int day1(String teilaufgabe) {
         file = new File("resources/day1.txt");
         readFile(file);
+        List<String> stringList = getStringList();
 
         List<Integer> calorieList = new ArrayList<Integer>();
         int temp = 0;
-
-        for (String string : getStringList()) {
+        for (String string : stringList) {
             if (string.isEmpty()) {
                 calorieList.add(temp);
                 temp = 0;
@@ -56,10 +58,11 @@ public class Main {
         file = new File("resources/day2.txt");
 
         readFile(file);
-        // String[] test = { "A Y", "B X", "C Z" };
+        // List<String> stringList = List.of("A Y", "B X", "C Z");
+        List<String> stringList = getStringList();
         int gesammtPunkte = 0;
         if (teilaufgabe.equals("a")) {
-            for (String string : getStringList()) {
+            for (String string : stringList) {
                 int temp = 0;
                 char first = string.charAt(0);
                 char last = string.charAt(2);
@@ -98,7 +101,7 @@ public class Main {
                 gesammtPunkte += temp;
             }
         } else {
-            for (String string : getStringList()) {
+            for (String string : stringList) {
                 int temp = 0;
                 char first = string.charAt(0);
                 char last = string.charAt(2);
@@ -134,6 +137,52 @@ public class Main {
                     break;
                 }
                 gesammtPunkte += temp;
+            }
+        }
+        return gesammtPunkte;
+    }
+
+    private static int day3(String teilaufgabe) {
+        file = new File("resources/day3.txt");
+        readFile(file);
+        List<String> stringList = getStringList();
+        // List<String> stringList = List.of("vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
+        // "PmmdzqPrVvPwwTWBwg", "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", "ttgJtRGJQctTZtZT",
+        // "CrZsJsPPZsGzwwsLwLmpwMDw");
+
+        int gesammtPunkte = 0;
+        if (teilaufgabe.equals("a")) {
+            for (String string : stringList) {
+                String stringA = string.substring(0, string.length() / 2);
+                String stringB = string.substring(string.length() / 2, string.length());
+
+                int idx = 0;
+                while (stringB.indexOf(stringA.charAt(idx)) == -1) {
+                    idx++;
+                }
+                int temp = (int) stringA.charAt(idx);
+                if (Character.isLowerCase(temp)) {
+                    gesammtPunkte += temp - 'a' + 1;
+                } else {
+                    gesammtPunkte += temp - 'A' + 27;
+                }
+            }
+        } else {
+            for (int i = 0; i < stringList.size(); i += 3) {
+                String stringA = stringList.get(i);
+                String stringB = stringList.get(i + 1);
+                String stringC = stringList.get(i + 2);
+
+                int idx = 0;
+                while (stringB.indexOf(stringA.charAt(idx)) == -1 || stringC.indexOf(stringA.charAt(idx)) == -1) {
+                    idx++;
+                }
+                int temp = (int) stringA.charAt(idx);
+                if (Character.isLowerCase(temp)) {
+                    gesammtPunkte += temp - 'a' + 1;
+                } else {
+                    gesammtPunkte += temp - 'A' + 27;
+                }
             }
         }
         return gesammtPunkte;
