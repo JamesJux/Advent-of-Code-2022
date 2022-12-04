@@ -21,7 +21,9 @@ public class Main {
         // temp += day2("a");
         // temp += day2("b");
         // temp += day3("a");
-        temp += day3("b");
+        // temp += day3("b");
+        // temp += day4("a");
+        temp += day4("b");
 
         CopyToClipboard(temp);
         System.out.println(temp);
@@ -182,6 +184,35 @@ public class Main {
                     gesammtPunkte += temp - 'a' + 1;
                 } else {
                     gesammtPunkte += temp - 'A' + 27;
+                }
+            }
+        }
+        return gesammtPunkte;
+    }
+
+    private static int day4(String teilaufgabe) {
+        file = new File("resources/day4.txt");
+        readFile(file);
+        List<String> stringList = getStringList();
+        // List<String> stringList = List.of("2-4,6-8", "2-3,4-5", "5-7,7-9", "2-8,3-7", "6-6,4-6",
+        // "2-6,4-8");
+
+        int gesammtPunkte = 0;
+        for (String string : stringList) {
+            String[] stringArray = string.split(",");
+            int elveAfirst = Integer.parseInt(stringArray[0].split("-")[0]);
+            int elveAsecond = Integer.parseInt(stringArray[0].split("-")[1]);
+            int elveBfirst = Integer.parseInt(stringArray[1].split("-")[0]);
+            int elveBsecond = Integer.parseInt(stringArray[1].split("-")[1]);
+
+            if (teilaufgabe.equals("a")) {
+                if ((elveAfirst >= elveBfirst && elveAsecond <= elveBsecond)
+                        || (elveBfirst >= elveAfirst && elveBsecond <= elveAsecond)) {
+                    gesammtPunkte += 1;
+                }
+            } else {
+                if (!(elveAsecond < elveBfirst) && !(elveBsecond < elveAfirst)) {
+                    gesammtPunkte += 1;
                 }
             }
         }
