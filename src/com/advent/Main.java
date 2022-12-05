@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Main {
     static File file;
@@ -23,7 +24,9 @@ public class Main {
         // temp += day3("a");
         // temp += day3("b");
         // temp += day4("a");
-        temp += day4("b");
+        // temp += day4("b");
+        // temp += day5("a");
+        temp += day5("b");
 
         CopyToClipboard(temp);
         System.out.println(temp);
@@ -217,6 +220,88 @@ public class Main {
             }
         }
         return gesammtPunkte;
+    }
+
+    private static String day5(String teilaufgabe) {
+        file = new File("resources/day5.txt");
+        readFile(file);
+
+        List<String> stringList = getStringList();
+        // List<String> stringList = List.of(" [D] ", "[N] [C] ", "[Z] [M] [P]", " 1 2 3 ", "",
+        // "move 1 from 2 to 1", "move 3 from 1 to 3", "move 2 from 2 to 1", "move 1 from 1 to 2");
+
+        // Suche Anzahl an Stacks
+        int numberOffArrays = 0;
+        for (String string : stringList) {
+            if (string.contains(" 1 ")) {
+                String[] stringArray = string.split(" ");
+                numberOffArrays = Integer.parseInt(stringArray[stringArray.length - 1]);
+                break;
+            }
+        }
+
+        // Erstelle Stacks mit vorgegebenen Inhalt
+        List<Stack<Character>> stacks = new ArrayList<Stack<Character>>();
+        for (int i = 0; i < numberOffArrays; i++) {
+            stacks.add(new Stack<>());
+            for (int j = stringList.size() - 1; j >= 0; j--) {
+                if (stringList.get(j).contains("[")) {
+                    if (stringList.get(j).charAt(i * 4) == '[') {
+                        stacks.get(i).push(stringList.get(j).charAt((i * 4) + 1));
+                    }
+                }
+            }
+        }
+
+        // Verschiebt die Inhalte nach den Befehlen aus der Quelldatei
+        String gesammtString = "";
+        for (String string : stringList) {
+            if (string.contains("from")) {
+                String[] stringArray = string.split(" ");
+                int count = Integer.parseInt(stringArray[1]);
+                int from = Integer.parseInt(stringArray[3]) - 1;
+                int to = Integer.parseInt(stringArray[5]) - 1;
+
+                stacks = moveStackContent(teilaufgabe, stacks, count, from, to);
+            }
+        }
+        for (Stack<Character> stack : stacks) {
+            gesammtString += stack.peek();
+
+        }
+        return gesammtString;
+    }
+
+    /**
+     * Hilfsmethode für Aufgabe Tag 5 Verschiebt chars count oft vom from nach to
+     * 
+     * @param teilaufgabe Die Angabe ob Aufgabenteil 'A' oder 'B' berechnet werden soll.
+     * @param stacks      Die Liste aller Stacks
+     * @param count       Anzahl der Verschiebungen
+     * @param from        Quell Stack
+     * @param to          Ziel Stack
+     * @return die aktualisierten Stacks , Inplace Ersetzung.
+     */
+    private static List<Stack<Character>> moveStackContent(String teilaufgabe, List<Stack<Character>> stacks, int count,
+            int from, int to) {
+        if (teilaufgabe.equals("a")) {
+            while (count != 0) {
+                stacks.get(to).push(stacks.get(from).pop());
+                count--;
+            }
+        } else {
+            Stack<Character> temp = new Stack<Character>();
+            int idx = count;
+            while (idx != 0) {
+                temp.push(stacks.get(from).pop());
+                idx--;
+            }
+            while (idx != count) {
+                stacks.get(to).push(temp.pop());
+                idx++;
+            }
+        }
+        return stacks;
     }
 
     private static List<String> getStringList() {
