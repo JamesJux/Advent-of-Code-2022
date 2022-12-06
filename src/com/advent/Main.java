@@ -8,7 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 public class Main {
@@ -26,7 +28,9 @@ public class Main {
         // temp += day4("a");
         // temp += day4("b");
         // temp += day5("a");
-        temp += day5("b");
+        // temp += day5("b");
+        // temp += day6("a");
+        temp += day6("b");
 
         CopyToClipboard(temp);
         System.out.println(temp);
@@ -270,6 +274,40 @@ public class Main {
 
         }
         return gesammtString;
+    }
+
+    private static int day6(String teilaufgabe) {
+        file = new File("resources/day6.txt");
+        readFile(file);
+        List<String> stringList = getStringList();
+        // List<String> stringList = List.of("bvwbjplbgvbhsrlpgdmjqwftvncz", "nppdvjthqldpwncqszvftbrmjlhg",
+        // "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw");
+
+        int gesammtPunkte = 0;
+        for (String string : stringList) {
+            if (teilaufgabe.equals("a")) {
+                gesammtPunkte = getIndexOfMarker(string, 4);
+            } else {
+                gesammtPunkte = getIndexOfMarker(string, 14);
+            }
+        }
+        return gesammtPunkte;
+    }
+
+    private static int getIndexOfMarker(String string, int anzahl) {
+        Set<Character> charSet = new HashSet<>(string.length());
+        // System.out.println(string);
+        for (int i = anzahl - 1; i < string.length() - 1; i++) {
+            charSet.removeAll(charSet);
+            for (int j = 0; j < anzahl; j++) {
+                charSet.add(string.charAt(i - j));
+
+            }
+            if (charSet.size() == anzahl) {
+                return i + 1;
+            }
+        }
+        return -1;
     }
 
     /**
