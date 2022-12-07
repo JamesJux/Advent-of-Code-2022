@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import com.advent.day7.Datei;
+import com.advent.day7.Ordner;
+
 public class Main {
     static File file;
     static BufferedReader reader = null;
@@ -30,7 +33,9 @@ public class Main {
         // temp += day5("a");
         // temp += day5("b");
         // temp += day6("a");
-        temp += day6("b");
+        // temp += day6("b");
+        // temp += day7("a");
+        temp += day7("b");
 
         CopyToClipboard(temp);
         System.out.println(temp);
@@ -292,6 +297,79 @@ public class Main {
             }
         }
         return gesammtPunkte;
+    }
+
+    private static int day7(String teilaufgabe) {
+        file = new File("resources/day7.txt");
+        readFile(file);
+        List<String> stringList = getStringList();
+        // List<String> stringList = List.of("$ cd /", "$ ls", "dir a", "14848514 b.txt", "8504156 c.dat",
+        // "dir d", "$ cd a", "$ ls", "dir e", "29116 f", "2557 g", "62596 h.lst", "$ cd e", "$ ls",
+        // "584 i", "$ cd ..", "$ cd ..", "$ cd d", "$ ls", "4060174 j", "8033020 d.log",
+        // "5626152 d.ext", "7214296 k");
+
+        // Verarbeitet die Eingabe in eine interne Struktur.
+        Ordner homeOrdner = new Ordner("/", null);
+        Ordner aktuellerOrdner = homeOrdner;
+        for (String string : stringList) {
+            String[] stringArray = string.split(" ");
+            switch (stringArray[0]) {
+            case "$": {
+                switch (stringArray[1]) {
+                case "cd": {
+                    if (stringArray[2].equals("..")) {
+                        aktuellerOrdner = aktuellerOrdner.getParent();
+                    } else if (stringArray[2].equals("/")) {
+                        aktuellerOrdner = homeOrdner;
+                    } else {
+                        aktuellerOrdner = aktuellerOrdner.getOrdner(stringArray[2]);
+                    }
+                    break;
+                }
+                case "ls": {
+                    break;
+                }
+                default:
+                    throw new IllegalArgumentException("Unexpected value: " + stringArray[1]);
+                }
+                break;
+            }
+            case "dir": {
+                aktuellerOrdner.addToOrdnerListe(new Ordner(stringArray[1], aktuellerOrdner));
+                break;
+            }
+            default: {
+                try {
+                    int groesse = Integer.parseInt(stringArray[0]);
+                    aktuellerOrdner.addToDateiListe(new Datei(stringArray[1], groesse));
+
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Unexpected value: " + stringArray[0]);
+                }
+            }
+            }
+        }
+
+        // Beantwortet die Fragestellungen, zur Hilfe wird eine Liste alle Ordner erzeugt und absteigend
+        // sortiert.
+        List<Ordner> ordnerListe = new ArrayList<Ordner>();
+        homeOrdner.getSubordnerList(ordnerListe);
+        ordnerListe.sort((o1, o2) -> o1.getGroesse() - o2.getGroesse());
+
+        int gesammtGroesse = ordnerListe.get(ordnerListe.size() - 1).getGroesse();
+        int antwortAGroesse = 0;
+        for (Ordner ordner : ordnerListe) {
+            if (teilaufgabe.equals("a")) {
+                if (ordner.getGroesse() <= 100000) {
+                    antwortAGroesse += ordner.getGroesse();
+                }
+            } else {
+                if (ordner.getGroesse() >= -40000000 + gesammtGroesse) {
+                    return ordner.getGroesse();
+                }
+            }
+        }
+        return antwortAGroesse;
     }
 
     private static int getIndexOfMarker(String string, int anzahl) {
