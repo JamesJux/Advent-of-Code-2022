@@ -1,8 +1,8 @@
 package com.advent.day7;
 
 public class Datei {
-    public String name;
-    public int groessse;
+    private String name;
+    private int groessse;
 
     public Datei(String name, int groessse) {
         super();

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ordner {
-    public String name;
-    public List<Ordner> ordnerListe = new ArrayList<Ordner>();
-    public List<Datei> dateiListe = new ArrayList<Datei>();
-    public Ordner parent;
+    private String name;
+    private List<Ordner> ordnerListe = new ArrayList<Ordner>();
+    private List<Datei> dateiListe = new ArrayList<Datei>();
+    private Ordner parent;
 
     public Ordner(String name, Ordner parent) {
         super();
@@ -37,10 +37,6 @@ public class Ordner {
 
     public Ordner getParent() {
         return parent;
-    }
-
-    public void setParent(Ordner parent) {
-        this.parent = parent;
     }
 
     public int getGroesse() {

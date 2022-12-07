@@ -57,7 +57,7 @@ public class Main {
             }
         }
 
-        // Verkehrt herum sortieren, damit die größten vorne sind.
+        // Verkehrt herum sortieren, damit die Größten vorne sind.
         calorieList.sort((o1, o2) -> o2.compareTo(o1));
 
         if (teilaufgabe.equals("a")) {
@@ -70,7 +70,6 @@ public class Main {
 
     private static int day2(String teilaufgabe) {
         file = new File("resources/day2.txt");
-
         readFile(file);
         // List<String> stringList = List.of("A Y", "B X", "C Z");
         List<String> stringList = getStringList();
@@ -191,6 +190,7 @@ public class Main {
                 while (stringB.indexOf(stringA.charAt(idx)) == -1 || stringC.indexOf(stringA.charAt(idx)) == -1) {
                     idx++;
                 }
+
                 int temp = (int) stringA.charAt(idx);
                 if (Character.isLowerCase(temp)) {
                     gesammtPunkte += temp - 'a' + 1;
@@ -276,7 +276,6 @@ public class Main {
         }
         for (Stack<Character> stack : stacks) {
             gesammtString += stack.peek();
-
         }
         return gesammtString;
     }
@@ -342,7 +341,6 @@ public class Main {
                 try {
                     int groesse = Integer.parseInt(stringArray[0]);
                     aktuellerOrdner.addToDateiListe(new Datei(stringArray[1], groesse));
-
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Unexpected value: " + stringArray[0]);
                 }
@@ -428,7 +426,6 @@ public class Main {
                 stringList.add(line);
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return stringList;
@@ -438,7 +435,6 @@ public class Main {
         try {
             reader = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
